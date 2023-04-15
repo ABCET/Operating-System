@@ -3,13 +3,14 @@
 
 struct Process
 {
-    int pid; // process id
-    int at;  // arrival time
-    int bt;  // burst time
-    int p;   // priority
-    int rt;  // remaining time
-    int wt;  // waiting time
-    int tat; // turnaround time
+    int pid;  // process id
+    int at;   // arrival time
+    int bt;   // burst time
+    int p;    // priority
+    int rt;   // remaining time
+    int wt;   // waiting time
+    int tat;  // turnaround time
+    int flag; // flag to check if process is in ready queue or not
 } temp, processes[MAX], *ready_queue[MAX], *cp, *p;
 
 int front = 0, rear = 0; // ready queue
@@ -47,17 +48,22 @@ struct Process *dequeue()
 void round_robin()
 {
     enqueue(&processes[0]);
+    processes[0].flag = 1;
     printf("\nGantt Chart:\n");
     if (processes[0].at != 0)
         ct = processes[0].at;
-        
+    int prev = -1;
     while (front != rear)
     {
         cp = dequeue();
+        cp->flag = 0;
         for (int i = 0; i < n; i++)
         {
-            if (processes[i].at == cp->at && cp->pid != processes[i].pid)
+            if (processes[i].at == cp->at && cp->pid != processes[i].pid && processes[i].flag == 0 && processes[i].rt != 0)
+            {
                 enqueue(&processes[i]);
+                processes[i].flag = 1;
+            }
         }
         et = cp->rt < q ? cp->rt : q;
         cp->rt -= et;
@@ -66,12 +72,16 @@ void round_robin()
         for (int i = 0; i < n; i++)
         {
             if (processes[i].at > ct - et && processes[i].at <= ct && cp != &processes[i])
+            {
                 enqueue(&processes[i]);
+                processes[i].flag = 1;
+            }
         }
 
         if (cp->rt > 0)
         {
             enqueue(cp);
+            cp->flag = 1;
             cp->tat = ct - cp->at;
             cp->wt += ct - cp->at - cp->tat;
         }
@@ -87,12 +97,14 @@ void round_robin()
                 if (processes[i].at > ct)
                 {
                     enqueue(&processes[i]);
+                    processes[i].flag = 1;
                     printf("%d | idle | ", ct);
                     ct = processes[i].at;
                     break;
                 }
             }
         }
+        prev = cp->at;
     }
     printf("%d", ct);
 }
@@ -100,7 +112,7 @@ void round_robin()
 void sjf()
 {
     printf("\nGantt Chart:\n");
-    int completed = 0, prev = -1,curr = -1, ct = 0;
+    int completed = 0, prev = -1, curr = -1, ct = 0;
     while (completed <= n - 1)
     {
         curr = -1;
@@ -146,17 +158,17 @@ void fcfs()
         {
             processes[i].wt = 0;
             processes[i].tat = processes[i].bt;
-            printf("%d | p%d |", ct, processes[i].pid); 
+            printf("%d | p%d |", ct, processes[i].pid);
             ct += processes[i].bt;
         }
         else
         {
             if (ct < processes[i].at)
             {
-                printf("%d | IDLE |", ct); 
+                printf("%d | IDLE |", ct);
                 ct = processes[i].at;
             }
-            printf(" %d | p%d |", ct, processes[i].pid); 
+            printf(" %d | p%d |", ct, processes[i].pid);
             processes[i].wt = ct - processes[i].at;
             processes[i].tat = processes[i].wt + processes[i].bt;
             ct += processes[i].bt;
@@ -168,15 +180,15 @@ void fcfs()
 void priority()
 {
     printf("\nGantt Chart:\n");
-    int completed = 0,ct=processes[0].at, curr = -1, prev = -1;
-    while (completed <= n-1)
+    int completed = 0, ct = processes[0].at, curr = -1, prev = -1;
+    while (completed <= n - 1)
     {
         curr = -1;
         for (int i = 0; i < n; i++)
         {
             if (processes[i].at > ct)
                 break;
-            if (processes[i].at <= ct && processes[i].rt > 0 &&(curr == -1 || processes[i].p < processes[curr].p))
+            if (processes[i].at <= ct && processes[i].rt > 0 && (curr == -1 || processes[i].p < processes[curr].p))
                 curr = i;
         }
         if (curr != -1)
@@ -190,7 +202,7 @@ void priority()
                 completed++;
                 processes[curr].tat = ct - processes[curr].at;
                 processes[curr].wt = processes[curr].tat - processes[curr].bt;
-                prev=-1;
+                prev = -1;
             }
             else
                 prev = curr;
@@ -233,7 +245,7 @@ void input(int c)
         for (int i = 0; i < n; i++)
         {
             printf("Enter arrival time and burst time for process %d: ", i + 1);
-            scanf("%d %d",&processes[i].at,&processes[i].bt);
+            scanf("%d %d", &processes[i].at, &processes[i].bt);
             processes[i].pid = i + 1;
             processes[i].rt = processes[i].bt;
         }
@@ -241,7 +253,7 @@ void input(int c)
         for (int i = 0; i < n; i++)
         {
             printf("Enter arrival time, burst time and priority for process %d: ", i + 1);
-            scanf("%d %d %d",&processes[i].at,&processes[i].bt,&processes[i].p);
+            scanf("%d %d %d", &processes[i].at, &processes[i].bt, &processes[i].p);
             processes[i].pid = i + 1;
             processes[i].rt = processes[i].bt;
         }

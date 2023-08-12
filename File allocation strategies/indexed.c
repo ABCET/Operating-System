@@ -69,16 +69,15 @@ void main()
                 }
                 printf("File allocated to disk with index block\n");
                 temp = f[k].index_block;
-                printf("index block %d :", temp->index);
                 for (int i = 0; i < length-1; i++)
-                    printf("%d,", temp->block_no[i]);
-                printf("%d", temp->block_no[length - 1]);
+                    printf("%d->%d\n", temp->index,temp->block_no[i]);
+                printf("%d->%d\n", temp->index, temp->block_no[length - 1]);
             }
         }
         printf("\nAre there more files? (y/n): ");
         scanf(" %c", &c);
     }
-    printf("file\tindex_block\tlength\n");
+    printf("file\tindex\tlength\n");
     for (int i = 0; i <= k; i++)
     {
         printf("%d\t%d\t%d\n", i + 1, f[i].index_block->index, f[i].length);

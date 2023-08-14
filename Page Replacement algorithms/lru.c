@@ -1,5 +1,5 @@
 #include <stdio.h>
-int s[20], n, frame, fault = 0,size = 0;
+int s[20], n, frame, fault = 0, size = 0;
 
 struct frame
 {
@@ -16,7 +16,7 @@ int search(int item)
 }
 void main()
 {
-    int index, i, j, min,c=0;
+    int index, i, j, min, c = 0;
     printf("input no. of frames:");
     scanf("%d", &frame);
     printf("input reference string size:");

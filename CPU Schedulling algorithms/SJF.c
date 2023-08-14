@@ -43,7 +43,7 @@ void main()
         curr = -1;
         for (j = 0; j < n; j++)
         {
-            if (p[j].rt>0 && p[j].at <= ct && (curr == -1 || p[j].rt < p[curr].rt))
+            if (p[j].rt>0 && p[j].at <= ct && (curr == -1 || p[j].bt < p[curr].bt))
             {
                 curr = j;
             }

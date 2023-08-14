@@ -78,7 +78,7 @@ void main()
         ct += et;
         printf(" | P%d | %d", x->pid, ct);
         for (i = 0; i < n; i++)
-            if (p[i].at > ct - et && p[i].at<=ct  && p[i].pid != x->pid )
+            if (p[i].at > ct - et && p[i].at<=ct)
                 {
                     enqueue(&p[i]);
                     p[i].flag = 1;

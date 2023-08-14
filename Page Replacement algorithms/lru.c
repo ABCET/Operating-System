@@ -16,7 +16,7 @@ int search(int item)
 }
 void main()
 {
-    int index, i, j, min;
+    int index, i, j, min,c=0;
     printf("input no. of frames:");
     scanf("%d", &frame);
     printf("input reference string size:");
@@ -37,25 +37,20 @@ void main()
                     if (f[j].p < f[min].p)
                         min = j;
                 f[min].pgno = s[i];
-                f[min].p = frame;
-                for (j = 0; j < frame; j++)
-                    if (j != min)
-                        f[j].p--;
+                f[min].p = c;
             }
             else
             {
                 f[size].pgno = s[i];
-                f[size].p = size;
+                f[size].p = c;
                 size++;
             }
         }
         else
         {
-            f[index].p = frame;
-            for (j = 0; j < frame; j++)
-                if (j != index)
-                    f[j].p--;
+            f[index].p = c;
         }
+        c++;
         printf("\nframe : ");
         for (j = 0; j < size; j++)
             printf("%d ", f[j].pgno);
